@@ -1,0 +1,2 @@
+Module Contenus : 
+- Developper le module Article pour qu'il remplace le module Contenus. Ce module est facilement étendu par d'autres modules pour faire du scaffolding
