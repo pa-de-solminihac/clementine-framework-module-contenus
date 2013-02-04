@@ -6,10 +6,6 @@
             <textarea name="contenu_html_nicedit"><?php 
     if (isset($data['contenu_html_nicedit'])) {
         echo $this->getModel('fonctions')->htmlentities($data['contenu_html_nicedit']); 
-    } else {
-        if ($this->canGetBlock('contenus/default_contenu_html_nicedit')) {
-            $this->getBlock('contenus/default_contenu_html_nicedit', $data);
-        }
     }
 ?></textarea>
         </p>

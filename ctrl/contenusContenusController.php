@@ -37,7 +37,7 @@ class contenusContenusController extends contenusContenusController_Parent
     * Function : addcontenuAction() 
     * 
     */
-    function addcontenuAction($request) 
+    function addcontenuAction() 
     {
         if ($this->getModel('users')->needPrivilege('manage_contents')) {
             $ns = $this->getModel('fonctions');
@@ -61,20 +61,16 @@ class contenusContenusController extends contenusContenusController_Parent
      * Function : editcontenuAction() 
      * 
      */
-    function editcontenuAction($request) 
+    function editcontenuAction() 
     {
         if ($this->getModel('users')->needPrivilege('manage_contents')) {
             // recupere le contenu du script a injecter dans le footer
             $script = $this->getBlockHtml('contenus/jquery_ui_datepicker');
             // charge les js et css necessaires
-            if (Clementine::$config['module_jstools']['use_google_cdn']) {
-                $this->getModel('cssjs')->register_js('jquery', array('src' => 'https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js'));
-                $this->getModel('cssjs')->register_js('jquery.ui', array('src' => 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js'));
-            } else {
-                $this->getModel('cssjs')->register_js('jquery', array('src' => __WWW_ROOT_JSTOOLS__ . '/skin/jquery/jquery.min.js'));
-                $this->getModel('cssjs')->register_js('jquery.ui', array('src' => __WWW_ROOT_JSTOOLS__ . '/skin/jquery-ui/js/jquery-ui-1.8.16.custom.min.js'));
-            }
-            $this->getModel('cssjs')->register_css('ui.datepicker', array('src' => __WWW_ROOT_JSTOOLS__ . '/skin/jquery-ui/css/ui-lightness/jquery-ui-1.8.16.custom.css'));
+            $this->getModel('cssjs')->register_js('jquery', array('src' => __WWW_ROOT_JSTOOLS__ . '/skin/js/jquery/jquery-1.4.2.min.js'));
+            $this->getModel('cssjs')->register_js('ui.core', array('src' => __WWW_ROOT_JSTOOLS__ . '/skin/js/jquery-ui/ui.core.js'));
+            $this->getModel('cssjs')->register_js('ui.datepicker', array('src' => __WWW_ROOT_JSTOOLS__ . '/skin/js/jquery-ui/ui.datepicker.js'));
+            $this->getModel('cssjs')->register_css('ui.datepicker', array('src' => __WWW_ROOT_JSTOOLS__ . '/skin/css/jquery-ui.css'));
             $this->getModel('cssjs')->register_foot('ui.datepicker', $script);
             // traitements...
             $ns = $this->getModel('fonctions');
@@ -83,7 +79,7 @@ class contenusContenusController extends contenusContenusController_Parent
             $contenus = $this->getModel('contenus');
             $this->data['type_content'] = $type_content;
             $request = $this->getRequest();
-            $lang = $request->LANG;
+            $lang = $request['LANG'];
             $this->data['content'] = $contenus->getContent($id_content, $this->data['type_content'], $lang);
             $this->data['content_default'] = $contenus->getContentDefault($id_content, $this->data['type_content']);
             $this->data['page'] = $ns->ifGet('int', 'id_page');
@@ -96,7 +92,7 @@ class contenusContenusController extends contenusContenusController_Parent
     * Function : publishcontenuAction() 
     * 
     */
-    function publishcontenuAction($request) 
+    function publishcontenuAction() 
     {
         if ($this->getModel('users')->needPrivilege('manage_contents')) {
             $ns = $this->getModel('fonctions');
@@ -106,6 +102,7 @@ class contenusContenusController extends contenusContenusController_Parent
             $publish = $ns->ifGet("int", "publish"); 
             $contenus = $this->getModel('contenus');
             $contenus->publishContent($id_content, $type_content, $publish);
+
             if (isset($_SERVER['HTTP_REFERER'])) {
                 $ns->redirect($_SERVER['HTTP_REFERER']);
             } else {
@@ -120,7 +117,7 @@ class contenusContenusController extends contenusContenusController_Parent
     * Function : deletecontenuAction() 
     * 
     */
-    function deletecontenuAction($request) 
+    function deletecontenuAction() 
     {
         if ($this->getModel('users')->needPrivilege('manage_contents')) {
             $ns = $this->getModel('fonctions');
@@ -143,7 +140,7 @@ class contenusContenusController extends contenusContenusController_Parent
     * Function : valid_clementine_cms_contenu_htmlAction() 
     * 
     */
-    function valid_clementine_cms_contenu_htmlAction($request) 
+    function valid_clementine_cms_contenu_htmlAction() 
     {
         if ($this->getModel('users')->needPrivilege('manage_contents')) {
             $ns = $this->getModel('fonctions');
@@ -157,7 +154,7 @@ class contenusContenusController extends contenusContenusController_Parent
                 $contenus = $this->getModel('contenus');
                 // ajoute le contenu s'il n'existe pas deja
                 $request = $this->getRequest();
-                $lang = $request->LANG;
+                $lang = $request['LANG'];
                 if (!$id) {
                     $id = $contenus->addContenu($nom, $type_content, $id_zone, $id_page, $lang);
                 }
@@ -179,7 +176,7 @@ class contenusContenusController extends contenusContenusController_Parent
     * Function : valid_clementine_cms_contenu_html_niceditAction() 
     * 
     */
-    function valid_clementine_cms_contenu_html_niceditAction($request) 
+    function valid_clementine_cms_contenu_html_niceditAction() 
     {
         if ($this->getModel('users')->needPrivilege('manage_contents')) {
             $ns = $this->getModel('fonctions');
@@ -193,7 +190,7 @@ class contenusContenusController extends contenusContenusController_Parent
                 $contenus = $this->getModel('contenus');
                 // ajoute le contenu s'il n'existe pas deja
                 $request = $this->getRequest();
-                $lang = $request->LANG;
+                $lang = $request['LANG'];
                 if (!$id) {
                     $id = $contenus->addContenu($nom, $type_content, $id_zone, $id_page, $lang);
                 }
