@@ -83,7 +83,7 @@ class contenusContenusController extends contenusContenusController_Parent
             $contenus = $this->getModel('contenus');
             $this->data['type_content'] = $type_content;
             $request = $this->getRequest();
-            $lang = $request->LANG;
+            $lang = $request['LANG'];
             $this->data['content'] = $contenus->getContent($id_content, $this->data['type_content'], $lang);
             $this->data['content_default'] = $contenus->getContentDefault($id_content, $this->data['type_content']);
             $this->data['page'] = $ns->ifGet('int', 'id_page');
@@ -106,6 +106,7 @@ class contenusContenusController extends contenusContenusController_Parent
             $publish = $ns->ifGet("int", "publish"); 
             $contenus = $this->getModel('contenus');
             $contenus->publishContent($id_content, $type_content, $publish);
+
             if (isset($_SERVER['HTTP_REFERER'])) {
                 $ns->redirect($_SERVER['HTTP_REFERER']);
             } else {
@@ -157,7 +158,7 @@ class contenusContenusController extends contenusContenusController_Parent
                 $contenus = $this->getModel('contenus');
                 // ajoute le contenu s'il n'existe pas deja
                 $request = $this->getRequest();
-                $lang = $request->LANG;
+                $lang = $request['LANG'];
                 if (!$id) {
                     $id = $contenus->addContenu($nom, $type_content, $id_zone, $id_page, $lang);
                 }
@@ -193,7 +194,7 @@ class contenusContenusController extends contenusContenusController_Parent
                 $contenus = $this->getModel('contenus');
                 // ajoute le contenu s'il n'existe pas deja
                 $request = $this->getRequest();
-                $lang = $request->LANG;
+                $lang = $request['LANG'];
                 if (!$id) {
                     $id = $contenus->addContenu($nom, $type_content, $id_zone, $id_page, $lang);
                 }
