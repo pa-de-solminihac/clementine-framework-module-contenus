@@ -106,6 +106,7 @@ class contenusContenusController extends contenusContenusController_Parent
             $publish = $ns->ifGet("int", "publish"); 
             $contenus = $this->getModel('contenus');
             $contenus->publishContent($id_content, $type_content, $publish);
+
             if (isset($_SERVER['HTTP_REFERER'])) {
                 $ns->redirect($_SERVER['HTTP_REFERER']);
             } else {
