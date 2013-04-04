@@ -1,5 +1,4 @@
 <?php
-$ns = $this->getModel('fonctions');
 if (isset($data['content'])) {
     $contenu = $data['content'];
     $nb_types_contenus = 0;
@@ -16,14 +15,14 @@ if (count($contenu) > 1) {
 ?>
         <p>
             <a class="<?php echo $option; ?>" href="<?php echo __WWW__; ?>/contenus/addcontenu?id_zone=<?php 
-        if ($ns->ifGet('int', 'id')) { 
-            echo $ns->ifGet('int', 'id'); 
+        if ($request->get('int', 'id')) { 
+            echo $request->get('int', 'id'); 
         } else { 
             echo '0'; 
         } 
 ?>&id_page=<?php
-        if ($ns->ifGet('id', 'page')) { 
-            echo $ns->ifGet('id', 'page'); 
+        if ($request->get('int', 'page')) { 
+            echo $request->get('int', 'page'); 
         } else { 
             echo '0'; 
         } 
@@ -37,14 +36,14 @@ if (count($contenu) > 1) {
 }
 if (!$nb_types_contenus) {
     $url = __WWW__ . '/contenus/addcontenu?id_zone=';
-    if ($ns->ifGet('int', 'id')) { 
-        $url .= $ns->ifGet('int', 'id'); 
+    if ($request->get('int', 'id')) { 
+        $url .= $request->get('int', 'id'); 
     } else { 
         $url .= '0'; 
     } 
     $url .= '&id_page=';
-    if ($ns->ifGet('id', 'page')) { 
-        $url .= $ns->ifGet('id', 'page'); 
+    if ($request->get('int', 'page')) { 
+        $url .= $request->get('int', 'page'); 
     } else { 
         $url .= '0'; 
     } 

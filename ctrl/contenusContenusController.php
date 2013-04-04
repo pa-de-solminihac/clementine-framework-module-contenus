@@ -17,19 +17,19 @@ class contenusContenusController extends contenusContenusController_Parent
      * @access public
      * @return void
      */
-    function set_contenu_defaut ($id_contenu) 
+    function set_contenu_defaut ($request, $id_contenu) 
     {
         $ns = $this->getModel('fonctions');
         $contenus = $this->getModel('contenus');
         if (!$id_contenu) {
-            $donnees['id_contenu'] = $ns->strip_tags($ns->ifPost('int', 'id'));
+            $donnees['id_contenu'] = $ns->strip_tags($request->post('int', 'id'));
         } else {
             $donnees['id_contenu'] = $id_contenu;
         }
-        $donnees['type_contenu'] = $ns->strip_tags($ns->ifGet('string', 'type'));
-        $donnees['nom'] = $ns->ifPost('html', 'nom');
-        $donnees['date_lancement'] = $ns->ifPost('int', 'date_lancement_timestamp') / 1000;
-        $donnees['date_arret'] = $ns->ifPost('int', 'date_arret_timestamp') / 1000;
+        $donnees['type_contenu'] = $ns->strip_tags($request->get('string', 'type'));
+        $donnees['nom'] = $request->post('html', 'nom');
+        $donnees['date_lancement'] = $request->post('int', 'date_lancement_timestamp') / 1000;
+        $donnees['date_arret'] = $request->post('int', 'date_arret_timestamp') / 1000;
         return $contenus->setContentDefault($donnees);
     }
 
@@ -37,23 +37,23 @@ class contenusContenusController extends contenusContenusController_Parent
     * Function : addcontenuAction() 
     * 
     */
-    function addcontenuAction($request) 
+    function addcontenuAction($request, $params = null) 
     {
+        $ns = $this->getModel('fonctions');
         if ($this->getModel('users')->needPrivilege('manage_contents')) {
-            $ns = $this->getModel('fonctions');
             $contenus = $this->getModel('contenus');
-            if ($ns->ifGet('string', 'type_content')) {
-                $id_zone      = $ns->strip_tags($ns->ifGet('int', 'id_zone'));
-                $id_page      = $ns->strip_tags($ns->ifGet('int', 'id_page'));
-                $type_content = $ns->strip_tags($ns->ifGet('string', 'type_content'));
+            if ($request->get('string', 'type_content')) {
+                $id_zone      = $ns->strip_tags($request->get('int', 'id_zone'));
+                $id_page      = $ns->strip_tags($request->get('int', 'id_page'));
+                $type_content = $ns->strip_tags($request->get('string', 'type_content'));
                 // $this->data['content'] = $contenus->addContenu($donnees);
-                $this->getModel('fonctions')->redirect(__WWW__ . '/contenus/editcontenu?id_zone=' . $id_zone . '&id_page=' . $id_page . '&type=' . $type_content);
+                $ns->redirect(__WWW__ . '/contenus/editcontenu?id_zone=' . $id_zone . '&id_page=' . $id_page . '&type=' . $type_content);
             } else {
-                $this->data['id_page'] = $ns->ifGet('int', 'page');
+                $this->data['id_page'] = $request->get('int', 'page');
                 $this->data['content'] = $contenus->getListeTypeContent();
             }
         } else {
-            $this->getModel('fonctions')->redirect(__WWW__);
+            $ns->redirect(__WWW__);
         }
     }
 
@@ -61,7 +61,7 @@ class contenusContenusController extends contenusContenusController_Parent
      * Function : editcontenuAction() 
      * 
      */
-    function editcontenuAction($request) 
+    function editcontenuAction($request, $params = null) 
     {
         if ($this->getModel('users')->needPrivilege('manage_contents')) {
             // recupere le contenu du script a injecter dans le footer
@@ -77,16 +77,15 @@ class contenusContenusController extends contenusContenusController_Parent
             $this->getModel('cssjs')->register_css('ui.datepicker', array('src' => __WWW_ROOT_JSTOOLS__ . '/skin/jquery-ui/css/ui-lightness/jquery-ui-1.8.16.custom.css'));
             $this->getModel('cssjs')->register_foot('ui.datepicker', $script);
             // traitements...
-            $ns = $this->getModel('fonctions');
-            $id_content = $ns->ifGet("int", "id"); 
-            $type_content = $ns->ifGet("string", "type"); 
+            $id_content = $request->get("int", "id"); 
+            $type_content = $request->get("string", "type"); 
             $contenus = $this->getModel('contenus');
             $this->data['type_content'] = $type_content;
             $request = $this->getRequest();
             $lang = $request->LANG;
             $this->data['content'] = $contenus->getContent($id_content, $this->data['type_content'], $lang);
             $this->data['content_default'] = $contenus->getContentDefault($id_content, $this->data['type_content']);
-            $this->data['page'] = $ns->ifGet('int', 'id_page');
+            $this->data['page'] = $request->get('int', 'id_page');
         } else {
             $this->getModel('fonctions')->redirect(__WWW__);
         }
@@ -96,14 +95,14 @@ class contenusContenusController extends contenusContenusController_Parent
     * Function : publishcontenuAction() 
     * 
     */
-    function publishcontenuAction($request) 
+    function publishcontenuAction($request, $params = null) 
     {
+        $ns = $this->getModel('fonctions');
         if ($this->getModel('users')->needPrivilege('manage_contents')) {
-            $ns = $this->getModel('fonctions');
-            $id_content = $ns->ifGet("int", "id"); 
-            $id_page = $ns->ifGet("int", "id_page"); 
-            $type_content = $ns->ifGet("string", "type"); 
-            $publish = $ns->ifGet("int", "publish"); 
+            $id_content = $request->get("int", "id"); 
+            $id_page = $request->get("int", "id_page"); 
+            $type_content = $request->get("string", "type"); 
+            $publish = $request->get("int", "publish"); 
             $contenus = $this->getModel('contenus');
             $contenus->publishContent($id_content, $type_content, $publish);
             if (isset($_SERVER['HTTP_REFERER'])) {
@@ -112,7 +111,7 @@ class contenusContenusController extends contenusContenusController_Parent
                 $ns->redirect(__WWW__ . '/cms/editpage?id=' . $id_page);
             }
         } else {
-            $this->getModel('fonctions')->redirect(__WWW__);
+            $ns->redirect(__WWW__);
         }
     } 
 
@@ -120,22 +119,22 @@ class contenusContenusController extends contenusContenusController_Parent
     * Function : deletecontenuAction() 
     * 
     */
-    function deletecontenuAction($request) 
+    function deletecontenuAction($request, $params = null) 
     {
+        $ns = $this->getModel('fonctions');
         if ($this->getModel('users')->needPrivilege('manage_contents')) {
-            $ns = $this->getModel('fonctions');
-            $id_content = $ns->ifGet("int", "id"); 
-            $type_content = $ns->ifGet("string", "type"); 
+            $id_content = $request->get("int", "id"); 
+            $type_content = $request->get("string", "type"); 
             $contenus = $this->getModel('contenus');
             $this->data['content'] = $contenus->deleteContent($id_content, $type_content);
             if (isset($_SERVER['HTTP_REFERER'])) {
                 $ns->redirect($_SERVER['HTTP_REFERER']);
             } else {
-                $id_page = $ns->ifGet("int", "id_page"); 
+                $id_page = $request->get("int", "id_page"); 
                 $ns->redirect(__WWW__ . '/cms/editpage?id=' . $id_page);
             }
         } else {
-            $this->getModel('fonctions')->redirect(__WWW__);
+            $ns->redirect(__WWW__);
         }
     }
 
@@ -143,17 +142,17 @@ class contenusContenusController extends contenusContenusController_Parent
     * Function : valid_clementine_cms_contenu_htmlAction() 
     * 
     */
-    function valid_clementine_cms_contenu_htmlAction($request) 
+    function valid_clementine_cms_contenu_htmlAction($request, $params = null) 
     {
+        $ns = $this->getModel('fonctions');
         if ($this->getModel('users')->needPrivilege('manage_contents')) {
-            $ns = $this->getModel('fonctions');
-            if (!empty($_POST)) {
+            if (!empty($request->POST)) {
                 $type_content = 'clementine_cms_contenu_html';
-                $id           = $ns->ifPost('int', 'id');
-                $id_page      = $ns->ifPost('int', 'id_page');
-                $id_zone      = $ns->ifPost('int', 'id_zone');
-                $nom          = $ns->ifPost('html', 'nom');
-                $contenu_html = $ns->ifPost('html', 'contenu_html');
+                $id           = $request->post('int', 'id');
+                $id_page      = $request->post('int', 'id_page');
+                $id_zone      = $request->post('int', 'id_zone');
+                $nom          = $request->post('html', 'nom');
+                $contenu_html = $request->post('html', 'contenu_html');
                 $contenus = $this->getModel('contenus');
                 // ajoute le contenu s'il n'existe pas deja
                 $request = $this->getRequest();
@@ -161,7 +160,7 @@ class contenusContenusController extends contenusContenusController_Parent
                 if (!$id) {
                     $id = $contenus->addContenu($nom, $type_content, $id_zone, $id_page, $lang);
                 }
-                if ($this->set_contenu_defaut($id)) {
+                if ($this->set_contenu_defaut($request, $id)) {
                     $contenus->updateContenuHtml($id, $contenu_html, $lang);
                 }
             }
@@ -171,7 +170,7 @@ class contenusContenusController extends contenusContenusController_Parent
                 $ns->redirect(__WWW__ . '/cms');
             }
         } else {
-            $this->getModel('fonctions')->redirect(__WWW__);
+            $ns->redirect(__WWW__);
         }
     }
 
@@ -179,17 +178,17 @@ class contenusContenusController extends contenusContenusController_Parent
     * Function : valid_clementine_cms_contenu_html_niceditAction() 
     * 
     */
-    function valid_clementine_cms_contenu_html_niceditAction($request) 
+    function valid_clementine_cms_contenu_html_niceditAction($request, $params = null) 
     {
+        $ns = $this->getModel('fonctions');
         if ($this->getModel('users')->needPrivilege('manage_contents')) {
-            $ns = $this->getModel('fonctions');
-            if (!empty($_POST)) {
+            if (!empty($request->POST)) {
                 $type_content = 'clementine_cms_contenu_html_nicedit';
-                $id           = $ns->ifPost('int', 'id');
-                $id_zone      = $ns->ifPost('int', 'id_zone');
-                $id_page      = $ns->ifPost('int', 'id_page');
-                $nom          = $ns->ifPost('html', 'nom');
-                $contenu_html = $ns->ifPost('html', 'contenu_html_nicedit');
+                $id           = $request->post('int', 'id');
+                $id_zone      = $request->post('int', 'id_zone');
+                $id_page      = $request->post('int', 'id_page');
+                $nom          = $request->post('html', 'nom');
+                $contenu_html = $request->post('html', 'contenu_html_nicedit');
                 $contenus = $this->getModel('contenus');
                 // ajoute le contenu s'il n'existe pas deja
                 $request = $this->getRequest();
@@ -197,7 +196,7 @@ class contenusContenusController extends contenusContenusController_Parent
                 if (!$id) {
                     $id = $contenus->addContenu($nom, $type_content, $id_zone, $id_page, $lang);
                 }
-                if ($this->set_contenu_defaut($id)) {
+                if ($this->set_contenu_defaut($request, $id)) {
                     $contenus->updateContenuHtmlNicedit($id, $contenu_html, $lang);
                 }
             }
@@ -207,7 +206,7 @@ class contenusContenusController extends contenusContenusController_Parent
                 $ns->redirect(__WWW__ . '/cms');
             }
         } else {
-            $this->getModel('fonctions')->redirect(__WWW__);
+            $ns->redirect(__WWW__);
         }
     }
 }

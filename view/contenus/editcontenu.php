@@ -1,6 +1,5 @@
 <div class="form_contenu_edit">
 <?php
-$ns = $this->getModel('fonctions');
 if (isset($data['content'])) {
     $contenu = $data['content']['contenu'];
     $type_contenu = $data['type_content'];
@@ -9,7 +8,7 @@ if (isset($data['content'])) {
     $date_lancement = $default['date_lancement'] ? strftime('%d/%m/%Y', strtotime($default['date_lancement'])) : '';
     $date_arret = $default['date_arret'] ? strftime('%d/%m/%Y', strtotime($default['date_arret'])) : '';
 ?>
-    <form name="add_content" method="post" action="<?php echo __WWW__; ?>/contenus/valid_<?php echo $type_contenu; ?>?id=<?php echo $ns->ifGet('int', 'id'); ?>&amp;type=<?php echo $type_contenu; ?>" enctype="multipart/form-data">
+    <form name="add_content" method="post" action="<?php echo __WWW__; ?>/contenus/valid_<?php echo $type_contenu; ?>?id=<?php echo $request->get('int', 'id'); ?>&amp;type=<?php echo $type_contenu; ?>" enctype="multipart/form-data">
         <div class="content-box">
             <div class="content-box-header">
                 <h3>Informations de base</h3>
