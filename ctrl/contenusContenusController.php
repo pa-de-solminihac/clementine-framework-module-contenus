@@ -28,8 +28,8 @@ class contenusContenusController extends contenusContenusController_Parent
         }
         $donnees['type_contenu'] = $ns->strip_tags($request->get('string', 'type'));
         $donnees['nom'] = $request->post('html', 'nom');
-        $donnees['date_lancement'] = $request->post('int', 'date_lancement_timestamp') / 1000;
-        $donnees['date_arret'] = $request->post('int', 'date_arret_timestamp') / 1000;
+        $donnees['date_lancement'] = $request->post('string', 'clementine_cms_contenu_date_lancement');
+        $donnees['date_arret'] = $request->post('string', 'clementine_cms_contenu_date_arret');
         return $contenus->setContentDefault($donnees);
     }
 
@@ -67,15 +67,11 @@ class contenusContenusController extends contenusContenusController_Parent
             // recupere le contenu du script a injecter dans le footer
             $script = $this->getBlockHtml('contenus/jquery_ui_datepicker');
             // charge les js et css necessaires
-            if (Clementine::$config['module_jstools']['use_google_cdn']) {
-                $this->getModel('cssjs')->register_js('jquery', array('src' => 'https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js'));
-                $this->getModel('cssjs')->register_js('jquery.ui', array('src' => 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js'));
-            } else {
-                $this->getModel('cssjs')->register_js('jquery', array('src' => __WWW_ROOT_JSTOOLS__ . '/skin/jquery/jquery.min.js'));
-                $this->getModel('cssjs')->register_js('jquery.ui', array('src' => __WWW_ROOT_JSTOOLS__ . '/skin/jquery-ui/js/jquery-ui-1.8.16.custom.min.js'));
-            }
-            $this->getModel('cssjs')->register_css('ui.datepicker', array('src' => __WWW_ROOT_JSTOOLS__ . '/skin/jquery-ui/css/ui-lightness/jquery-ui-1.8.16.custom.css'));
-            $this->getModel('cssjs')->register_foot('ui.datepicker', $script);
+            $cssjs = $this->getModel('cssjs');
+            // jQuery
+            $cssjs->register_foot('jquery', array(
+                'src' => $this->getHelper('jquery')->getUrl()
+            ));
             // traitements...
             $id_content = $request->get("int", "id"); 
             $type_content = $request->get("string", "type"); 

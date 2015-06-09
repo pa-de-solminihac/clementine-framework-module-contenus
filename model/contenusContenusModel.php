@@ -207,13 +207,13 @@ class contenusContenusModel extends contenusContenusModel_Parent
             $sql .= "`nom_contenu` = '" . $db->escape_string($donnees['nom']) . "', ";
         }
         if ($donnees['date_lancement']) {
-            $sql .= "`date_lancement` = FROM_UNIXTIME(" . $db->escape_string($donnees['date_lancement']) . ") ";
+            $sql .= "`date_lancement` = '" . $db->escape_string($donnees['date_lancement']) . "' ";
         } else {
             $sql .= "`date_lancement` = NULL ";
         }
         $sql .= ", ";
         if ($donnees['date_arret']) {
-            $sql .= "`date_arret`     = FROM_UNIXTIME(" . $db->escape_string($donnees['date_arret']) . ") ";
+            $sql .= "`date_arret`     = '" . $db->escape_string($donnees['date_arret']) . "' ";
         } else {
             $sql .= "`date_arret`     = NULL ";
         }

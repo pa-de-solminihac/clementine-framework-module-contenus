@@ -9,7 +9,7 @@ if (isset($data['content'])) {
     $date_arret = $default['date_arret'] ? strftime('%d/%m/%Y', strtotime($default['date_arret'])) : '';
 ?>
     <form name="add_content" method="post" action="<?php echo __WWW__; ?>/contenus/valid_<?php echo $type_contenu; ?>?id=<?php echo $request->get('int', 'id'); ?>&amp;type=<?php echo $type_contenu; ?>" enctype="multipart/form-data">
-        <div class="content-box">
+        <div class="well content-box">
             <div class="content-box-header">
                 <h3>Informations de base</h3>
             </div>
@@ -19,7 +19,7 @@ if (isset($data['content'])) {
 ?>
             </div>
         </div>
-        <div class="content-box">
+        <div class="well content-box">
             <div class="content-box-header">
                 <h3>Contenu</h3>
             </div>
@@ -30,7 +30,7 @@ if (isset($data['content'])) {
 ?>
             </div>
         </div>
-        <p id="form_content_edit_submit"><input type="submit" name="valider" value="Valider" /></p>
+        <p id="form_content_edit_submit"><input class="btn btn-primary btn-block" type="submit" name="valider" value="Valider" /></p>
     </form>
 <?php
 } else {
